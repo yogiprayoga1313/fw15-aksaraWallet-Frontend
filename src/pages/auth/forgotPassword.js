@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AiOutlineMail } from 'react-icons/ai'
 import React from 'react'
 
 function ResetPassword() {
@@ -22,8 +23,10 @@ function ResetPassword() {
                         </div>
                         <form className='flex-col flex gap-10 mt-6'>
                             <div>
-                                <div></div>
-                                <input type="text" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                <div className='flex justify-start items-center'>
+                                    <div><AiOutlineMail size={25} /></div>
+                                    <input type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                </div>
                                 <hr />
                             </div>
                             <button className='btn btn-primary normal-case'>Confirm</button>
