@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import { AiOutlineMail } from 'react-icons/ai'
+import { FiLock, FiUser } from 'react-icons/fi'
 
 function Register() {
     return (
@@ -20,28 +22,36 @@ function Register() {
                         </div>
                         <form className='flex-col flex gap-10 mt-6'>
                             <div>
-                                <div></div>
-                                <input type="text" placeholder="Enter your firstname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                <div className='flex justify-start items-center'>
+                                    <div><FiUser size={25} /></div>
+                                    <input type="text" placeholder="Enter your firstname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                </div>
                                 <hr />
                             </div>
                             <div>
-                                <div></div>
-                                <input type="text" placeholder="Enter your lastname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                <div className='flex justify-start items-center'>
+                                    <div><FiUser size={25}  /></div>
+                                    <input type="text" placeholder="Enter your lastname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                </div>
                                 <hr />
                             </div>
                             <div>
-                                <div></div>
-                                <input type="text" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                <div className='flex justify-start items-center'>
+                                    <div><AiOutlineMail size={25} /></div>
+                                    <input type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                </div>
                                 <hr />
                             </div>
                             <div>
-                                <div></div>
-                                <input type="password" placeholder="Create your password" className="input w-full max-w-xs" style={{ outline: 'none' }} />
+                                <div className='flex justify-start items-center'>
+                                    <div><FiLock size={25} /></div>
+                                    <input type="password" placeholder="Enter your password" className="input w-full max-w-xs" style={{ outline: 'none' }} />
+                                </div>
                                 <hr />
                             </div>
                             <button className='btn btn-primary normal-case'>Sign Up</button>
                             <div className='flex items-center justify-center opacity-90'>
-                                <div>Already have an account? Let’s 
+                                <div>Already have an account? Let’s
                                     <Link className='text-blue-800 font-semibold' href='/auth/login'> Login</Link>
                                 </div>
                             </div>
