@@ -49,7 +49,9 @@ function Register() {
                                 </div>
                                 <hr />
                             </div>
-                            <button className='btn btn-primary normal-case'>Sign Up</button>
+                            <div className='mt-10'>
+                            <button className='btn btn-primary normal-case w-full'>Sign Up</button>
+                            </div>
                             <div className='flex items-center justify-center opacity-90'>
                                 <div>Already have an account? Let’s
                                     <Link className='text-blue-800 font-semibold' href='/auth/login'> Login</Link>

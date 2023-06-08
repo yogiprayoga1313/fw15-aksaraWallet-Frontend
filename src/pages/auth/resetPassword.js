@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { AiOutlineMail } from 'react-icons/ai'
+import { FiLock } from 'react-icons/fi'
 import React from 'react'
 
-function ForgotPassword() {
+function ResetPassword() {
     return (
         <>
             <div className='flex'>
@@ -19,17 +19,24 @@ function ForgotPassword() {
                             Password In a Minutes.
                         </div>
                         <div>
-                            To reset your password, you must type your e-mail and we will send a link to your email and you will be directed to the reset password screens.
+                            Now you can create a new password for your FazzPay account. Type your password twice so we can confirm your new passsword.
                         </div>
                         <form className='flex-col flex gap-10 mt-6'>
                             <div>
                                 <div className='flex justify-start items-center'>
-                                    <div><AiOutlineMail size={25} /></div>
-                                    <input type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                    <div><FiLock size={25} /></div>
+                                    <input type="password" placeholder="Create new password" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
                                 </div>
                                 <hr />
                             </div>
-                            <button className='btn btn-primary normal-case'>Confirm</button>
+                            <div>
+                                <div className='flex justify-start items-center'>
+                                    <div><FiLock size={25} /></div>
+                                    <input type="password" placeholder="Create new password" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                </div>
+                                <hr />
+                            </div>
+                            <button className='btn btn-primary normal-case'>Reset Password</button>
                         </form>
                     </div>
                 </div>
@@ -38,4 +45,4 @@ function ForgotPassword() {
     )
 }
 
-export default ForgotPassword
+export default ResetPassword
