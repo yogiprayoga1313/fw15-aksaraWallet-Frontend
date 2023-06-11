@@ -2,8 +2,58 @@ import Link from 'next/link'
 import React from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { FiLock, FiUser } from 'react-icons/fi'
+import { withIronSessionSsr } from "iron-session/next";
+import cookieConfig from '@/helpers/cookieConfig';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+
+
+export const getServerSideProps = withIronSessionSsr(
+    async function getServerSideProps({ req }) {
+        const token = req.session.token;
+
+        if (token) {
+            return {
+                props: {
+                    token
+                }
+            }
+        }
+
+        return {
+            props: {},
+        };
+    },
+    cookieConfig
+);
 
 function Register() {
+    const [loading, setLoading] = React.useState(false)
+    const [errMessage, setErrMessage] = React.useState('')
+    const router = useRouter()
+    const doRegister = async (e) => {
+        setLoading(true)
+        e.preventDefault()
+        const { value: username } = e.target.username
+        const { value: email } = e.target.email
+        const { value: password } = e.target.password
+        const form = new URLSearchParams({
+            username, email, password
+        })
+        try {
+            const { data } = await axios.post('/api/register', form.toString());
+            console.log(data)
+            setLoading(false);
+            if (data?.results?.token) {
+                router.push('/auth/login');
+            }
+        } catch (err) {
+            const message = err?.response?.data?.message
+            if (message) {
+                setErrMessage(message)
+            }
+        }
+    }
     return (
         <>
             <div className='flex'>
@@ -20,37 +70,37 @@ function Register() {
                         <div>
                             Transfering money is eassier than ever, you can access Aksara Wallet wherever you are.
                         </div>
-                        <form className='flex-col flex gap-10 mt-6'>
+                        <form onSubmit={doRegister} className='flex-col flex gap-10 mt-6'>
+                            {/* Tampilkan pesan kesalahan di bagian bawah input */}
+                            {errMessage && (
+                                <div className='alert alert-error danger text-sm mt-1'>{errMessage}</div>
+                            )}
                             <div>
                                 <div className='flex justify-start items-center'>
                                     <div><FiUser size={25} /></div>
-                                    <input type="text" placeholder="Enter your firstname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
-                                </div>
-                                <hr />
-                            </div>
-                            <div>
-                                <div className='flex justify-start items-center'>
-                                    <div><FiUser size={25}  /></div>
-                                    <input type="text" placeholder="Enter your lastname" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                    <input name='username' type="text" placeholder="Enter your username" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
                                 </div>
                                 <hr />
                             </div>
                             <div>
                                 <div className='flex justify-start items-center'>
                                     <div><AiOutlineMail size={25} /></div>
-                                    <input type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
+                                    <input name='email' type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
                                 </div>
                                 <hr />
                             </div>
                             <div>
                                 <div className='flex justify-start items-center'>
                                     <div><FiLock size={25} /></div>
-                                    <input type="password" placeholder="Enter your password" className="input w-full max-w-xs" style={{ outline: 'none' }} />
+                                    <input name='password' type="password" placeholder="Enter your password" className="input w-full max-w-xs" style={{ outline: 'none' }} />
                                 </div>
                                 <hr />
                             </div>
                             <div className='mt-10'>
-                            <button className='btn btn-primary normal-case w-full'>Sign Up</button>
+                                <button disabled={loading} className='btn btn-primary normal-case w-full'>
+                                    {loading && <span className="loading loading-spinner loading-xs"></span>}
+                                    {!loading && 'Sign Up'}
+                                </button>
                             </div>
                             <div className='flex items-center justify-center opacity-90'>
                                 <div>Already have an account? Let’s
