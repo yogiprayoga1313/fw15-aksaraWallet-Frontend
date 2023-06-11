@@ -5,14 +5,36 @@ import { AiOutlineArrowUp, AiOutlinePlus, AiOutlineArrowRight } from 'react-icon
 import { FiUser, FiLogOut, FiEdit2 } from 'react-icons/fi'
 import Footer from '../components/footer'
 import Image from 'next/image'
+import { withIronSessionSsr } from "iron-session/next";
+import cookieConfig from '@/helpers/cookieConfig'
+import Link from 'next/link'
+import checkCredentials from '@/helpers/checkCredentials'
+import Http from '@/helpers/http'
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    const token = req.session?.token
+    checkCredentials(token, res, '/auth/login')
+
+    const { data } = await Http(token).get('/profile')
+
+    return {
+      props: {
+        token,
+        user: data.results
+      },
+    };
+  },
+  cookieConfig
+);
 
 
 
-function SelfProfile() {
+function SelfProfile({ token, user }) {
   return (
     <div className='bg-gray-200 h-screen'>
       <div>
-        <Headers />
+        <Headers token={token} user={user} />
       </div>
       <div className='mt-10 flex justify-center'>
         <div className='flex gap-4'>
@@ -36,7 +58,9 @@ function SelfProfile() {
               </div>
               <div className='mt-60 flex items-center gap-3'>
                 <div><FiLogOut size={25} /></div>
-                <div>Logout</div>
+                <Link href='/auth/logout'>
+                  <div>Logout</div>
+                </Link>
               </div>
             </div>
           </div>
@@ -48,27 +72,29 @@ function SelfProfile() {
                     src="/asset/profile.jpg" alt="My Image" width={70} height={50} className='rounded-md'
                   />
                 </div>
-                <button className='btn btn-ghost normal-case opacity-50'><FiEdit2/>Edit</button>
+                <button className='btn btn-ghost normal-case opacity-50'><FiEdit2 />Edit</button>
                 <div className='flex flex-col justify-center items-center gap-1'>
-                  <div className='font-bold text-xl'>Robert Chandler</div>
+                  <div className='font-bold text-xl'>{user?.fullName}</div>
                   <div className='opacity-60'>+6281393877946</div>
                 </div>
               </div>
               <div className='flex flex-col gap-4'>
                 <div className='w-[433px] bg-gray-200 flex justify-between px-4 items-center rounded-xl'>
                   <div className='font-semibold'>Personal Information</div>
-                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50'/></button>
+                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50' /></button>
                 </div>
                 <div className='w-[433px] bg-gray-200 flex justify-between px-4 items-center rounded-xl'>
                   <div className='font-semibold'>Change Password</div>
-                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50'/></button>
+                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50' /></button>
                 </div>
                 <div className='w-[433px] bg-gray-200 flex justify-between px-4 items-center rounded-xl'>
                   <div className='font-semibold'>Change PIN</div>
-                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50'/></button>
+                  <button className='btn btn-ghost'><AiOutlineArrowRight size={20} className='opacity-50' /></button>
                 </div>
-                <div>
-                  <button className='btn btn-default normal-case font-semibold w-full text-start'>Logout</button>
+                <div className='bg-gray-300 w-full h-auto p-3 rounded-xl'>
+                  <Link href='/auth/logout'>
+                    <div className='font-bold'>Logout</div>
+                  </Link>
                 </div>
               </div>
             </div>
