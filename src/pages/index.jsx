@@ -4,26 +4,45 @@ import { BsDownload, BsTelephone } from 'react-icons/bs'
 import { FiLock } from 'react-icons/fi'
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai'
 import Link from 'next/link'
+import { withIronSessionSsr } from "iron-session/next";
+import cookieConfig from '@/helpers/cookieConfig'
+import checkCredentials from '@/helpers/checkCredentials'
+import Http from '@/helpers/http'
 
 
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    const token = req.session?.token
+    checkCredentials(token, res, '/auth/login')
+
+    const { data } = await Http(token).get('/profile')
+    return {
+      props: {
+        token,
+        user: data.results
+      },
+    };
+  },
+  cookieConfig
+);
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Home({ token, user }) {
   return (
     <>
-    {/* aksara header */}
+      {/* aksara header */}
       <div className='bg-violet-500 h-auto'>
         <div className='flex justify-around py-4'>
           <div className='text-3xl font-bold text-white'>Aksara Wallet</div>
-          <div className='flex gap-7'>
-            <button className='btn btn-outline btn-accent normal-case w-full'>
-              <Link href='/auth/login'>Login</Link>
-            </button>
-            <button className='btn btn-default normal-case w-full text-violet-700'>
-              <Link href='/auth/register'>Sign Up</Link>
-            </button>
-          </div>
+          {token ?
+            <Link href='/profile'>
+              <div className='text-xl font-bold text-white'>{user?.username}</div>
+            </Link> :
+            <div className="flex justify-center items-center gap-5">
+              <Link className="btn btn-outline btn-accent normal-case w-full" href='/auth/login'>Log In</Link>
+              <Link className="btn normal-case w-full text-violet-700" href='/auth/register'>Sign Up</Link>
+            </div>}
         </div>
         <div className='py-60'>
           <div className='flex flex-col justify-center items-center gap-7'>

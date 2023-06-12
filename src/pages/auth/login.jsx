@@ -1,61 +1,155 @@
 import Link from 'next/link'
 import React from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
-import { FiLock } from 'react-icons/fi'
+import { FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
 import { withIronSessionSsr } from "iron-session/next";
 import cookieConfig from '@/helpers/cookieConfig';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import propTypes from 'prop-types'
 
 
-export const getServerSideProps = withIronSessionSsr(
-    async function getServerSideProps({ req, res }) {
-        const token = req.session.token;
 
-        if (token) {
-            res.setHeader('Location', '/')
-            res.statusCode = 302
-            res.end()
-            return {
-                props: {}
-            }
-        }
 
-        return {
-            props: {},
-        };
-    },
-    cookieConfig
-);
+const validationSchema = Yup.object({
+    email: Yup.string().email('Email is invalid').required('Email is required'),
+    password: Yup.string().required('Password is required')
+})
+
+const FormLogin = ({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => {
+    const [errMessage, setErrMessage] = React.useState('')
+
+    React.useEffect(() => {
+        setErrMessage('');
+    }, [values]);
+
+    const [iconEye, setIconEye] = React.useState(false)
+    const [typePassword, setTypePassword] = React.useState(false)
+
+    const handleInputPassword = () => {
+        setIconEye(!typePassword)
+        setTypePassword(!iconEye)
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className='flex-col flex gap-10 mt-6'>
+            {errMessage &&
+                (<div>
+                    <div className="alert alert-error danger text-[11px]">{errMessage}</div>
+                </div>)}
+            <div>
+                <div className='flex justify-start items-center gap-5'>
+                    <div><AiOutlineMail size={25} /></div>
+                    <input
+                        name='email'
+                        type="email"
+                        placeholder="Enter your e-mail"
+                        className={`input w-full max-w-xs outline-none ${errors.email && touched.email}`}
+                        style={{ outline: 'none' }}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.email} />
+                </div>
+                <hr />
+                {errors.email && touched.email &&
+                    (<label className="label">
+                        <span className="label-text-left text-error text-xs outline-none">{errors.email}</span>
+                    </label>
+                    )}
+            </div>
+            <div className=''>
+                <div className='flex justify-start items-center gap-5'>
+                    <div><FiLock size={25} /></div>
+                    <input
+                        name='password'
+                        type={typePassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        className={`input w-full max-w-xs ${errors.password && touched.password}`}
+                        style={{ outline: 'none' }}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.password} />
+                    <button type='button' onClick={handleInputPassword} className=' text-[#4c3f91]'>
+                        {iconEye ? (
+                            <i className=''>
+                                <FiEye size={20} />
+                            </i>
+                        ) : (
+                            <i className=''>
+                                <FiEyeOff size={20} />
+                            </i>
+                        )}
+                    </button>
+                </div>
+                <hr />
+                {errors.password && touched.password && (
+                    <label className="label">
+                        <span className="label-text-left text-error text-xs ">{errors.password}</span>
+                    </label>
+                )}
+            </div>
+            <div className='opacity-70 flex justify-end'>
+                <Link href='/auth/forgotPassword' >Forgot password?</Link>
+            </div>
+            <button
+                type='submit'
+                disabled={isSubmitting}
+                className='btn btn-primary normal-case'
+            >
+                {isSubmitting && <span className="loading loading-spinner loading-xs"></span>}
+                {!isSubmitting && 'Login'}
+            </button>
+            <div className='flex items-center justify-center opacity-90'>
+                <div>Don’t have an account? Let’s
+                    <Link className='text-blue-800 font-semibold' href='/auth/register'> Sign Up</Link>
+                </div>
+            </div>
+        </form>
+    )
+}
+
+FormLogin.propTypes = {
+    values: propTypes.string,
+    errors: propTypes.string,
+    touched: propTypes.string,
+    handleBlur: propTypes.func,
+    handleChange: propTypes.func,
+    handleSubmit: propTypes.func,
+    isSubmitting: propTypes.bool,
+}
 
 
 function Login() {
-    const [loading, setLoading] = React.useState(false)
     const router = useRouter()
-    const [errMessage, setErrMessage] = React.useState('')
 
-    const doLogin = async (e) => {
-        setLoading(true)
-        e.preventDefault()
+    const doLogin = async (values, { setSubmitting, setErrors }) => {
+        setSubmitting(true)
+        setErrors('')
+
+        if (!values.email || !values.password) {
+            setSubmitting(false);
+            return;
+        }
+
         try {
-            const { value: email } = e.target.email
-            const { value: password } = e.target.password
             const form = new URLSearchParams({
-                email, password
-            })
+                email: values.email,
+                password: values.password
+            });
             const { data } = await axios.post('/api/login', form.toString())
             console.log(data)
-            setLoading(false)
-            if (data?.results?.token) {
-                router.push('/')
+            setSubmitting(false)
+            if (data.results.token) {
+                router.push('/home')
             }
-        } catch (err) {
-            const message = err.response?.data?.message
-            if (message) {
-                setErrMessage(message)
-            } else {
-                setErrMessage('Login failed. Please try again.');
+        } catch (error) {
+            const message = error.response?.data?.message;
+            if (message?.includes('duplicate')) {
+                setErrors('email exsis')
             }
+            setSubmitting(false)
         }
     }
     return (
@@ -74,37 +168,18 @@ function Login() {
                         <div>
                             Transfering money is eassier than ever, you can access Aksara Wallet wherever you are.
                         </div>
-                        <form onSubmit={doLogin} className='flex-col flex gap-10 mt-6'>
-                            {errMessage && (<div>
-                                <div className="alert alert-error danger text-[11px]">{errMessage}</div>
-                            </div>)}
-                            <div>
-                                <div className='flex justify-start items-center'>
-                                    <div><AiOutlineMail size={25} /></div>
-                                    <input name='email' type="email" placeholder="Enter your e-mail" className=" input w-full max-w-xs outline-none" style={{ outline: 'none' }} />
-                                </div>
-                                <hr />
-                            </div>
-                            <div>
-                                <div className='flex justify-start items-center'>
-                                    <div><FiLock size={25} /></div>
-                                    <input name='password' type="password" placeholder="Enter your password" className="input w-full max-w-xs" style={{ outline: 'none' }} />
-                                </div>
-                                <hr />
-                            </div>
-                            <Link href='/auth/forgotPassword' className='opacity-70 flex justify-end'>
-                                <div>Forgot password?</div>
-                            </Link>
-                            <button type='submit' disabled={loading} className='btn btn-primary normal-case'>
-                                {loading && <span className="loading loading-spinner loading-xs"></span>}
-                                {!loading && 'login'}
-                            </button>
-                            <div className='flex items-center justify-center opacity-90'>
-                                <div>Don’t have an account? Let’s
-                                    <Link className='text-blue-800 font-semibold' href='/auth/register'> Sign Up</Link>
-                                </div>
-                            </div>
-                        </form>
+                        <Formik
+                            initialValues={{
+                                email: '',
+                                password: ''
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={doLogin}
+                        >
+                            {(props) => (
+                                <FormLogin {...props} />
+                            )}
+                        </Formik>
                     </div>
                 </div>
             </div>
