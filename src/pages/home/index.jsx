@@ -6,14 +6,35 @@ import { FiUser, FiLogOut } from 'react-icons/fi'
 import Footer from '../components/footer'
 import Image from 'next/image'
 import Link from 'next/link'
+import { withIronSessionSsr } from "iron-session/next";
+import cookieConfig from '@/helpers/cookieConfig'
+import checkCredentials from '@/helpers/checkCredentials'
+import Http from '@/helpers/http'
 
 
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    const token = req.session?.token
+    checkCredentials(token, res, '/auth/login')
 
-function Dashboard() {
+    const { data } = await Http(token).get('/profile')
+    console.log(data)
+
+    return {
+      props: {
+        token,
+        user: data.results
+      },
+    };
+  },
+  cookieConfig
+);
+
+function Dashboard({ token, user }) {
   return (
     <div className='bg-gray-200 h-screen'>
       <div>
-        <Headers />
+        <Headers token={token} user={user} />
       </div>
       <div className='mt-10 flex justify-center'>
         <div className='flex gap-5'>
@@ -33,11 +54,11 @@ function Dashboard() {
               </div>
               <div className='flex items-center gap-3'>
                 <div><FiUser size={25} /></div>
-                <div>Profile</div>
+                <Link href='/profile'><div>Profile</div></Link>
               </div>
               <div className='mt-60 flex items-center gap-3'>
                 <div><FiLogOut size={25} /></div>
-                <div>Logout</div>
+                <Link href='/auth/logout'><div>Logout</div></Link>
               </div>
             </div>
           </div>

@@ -1,7 +1,15 @@
 import Link from 'next/link'
 import React from 'react'
+import PinInput from '../components/PinInput'
 
 function Pin() {
+    const [pin, setPin] = React.useState('')
+    const [showAlert, setShowAlert] = React.useState(false)
+    
+    const submitPin = () => {
+        // kirim data ke backend
+    }
+
     return (
         <>
             <div className='flex'>
@@ -18,19 +26,15 @@ function Pin() {
                             That You Created Yourself.
                         </div>
                         <div>
-                        Create 6 digits pin to secure all your money and your data in Aksara Wallet. Keep it secret and don’t tell anyone about your FazzPay account password and the PIN.
+                            Create 6 digits pin to secure all your money and your data in Aksara Wallet. Keep it secret and don’t tell anyone about your Wallet account password and the PIN.
                         </div>
-                        <form className='flex flex-col gap-10 mt-6 items-center'>
-                            <div className='flex gap-3 items-center justify-center'>
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
-                                <input type="text" className="text-center input input-bordered w-full max-w-xs" />
+                        <div className='flex flex-col gap-10 mt-6 items-center'>
+                            {/* {showAlert && <div className='alert alert-sucess' >Pin has 6 digits</div>} */}
+                            <PinInput onChangePin={setPin} />
+                            <div className='w-full'>
+                                <button onClick={submitPin} type='submit' className='btn btn-primary w-full normal-case'>Confirm</button>
                             </div>
-                            <button className='btn btn-primary w-full normal-case'>Confirm</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

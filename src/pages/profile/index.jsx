@@ -74,7 +74,7 @@ function SelfProfile({ token, user }) {
                 </div>
                 <button className='btn btn-ghost normal-case opacity-50'><FiEdit2 />Edit</button>
                 <div className='flex flex-col justify-center items-center gap-1'>
-                  <div className='font-bold text-xl'>{user?.fullName}</div>
+                  <div className='font-bold text-xl'>{user?.username}</div>
                   <div className='opacity-60'>+6281393877946</div>
                 </div>
               </div>
