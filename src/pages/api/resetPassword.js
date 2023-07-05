@@ -4,7 +4,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 export default withIronSessionApiRoute(
     async function forgotPassword(req, res) {
         try {
-            const request = await fetch('https://cute-lime-goldfish-toga.cyclic.app/auth/reset-password', {
+            const request = await fetch('https://outstanding-train-fawn.cyclic.app/auth/reset-password', {
                 method: "POST",
                 body: new URLSearchParams(req.body).toString(),
                 headers: {

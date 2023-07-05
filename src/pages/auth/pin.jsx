@@ -1,13 +1,39 @@
-import Link from 'next/link'
 import React from 'react'
 import PinInput from '../components/PinInput'
+import { useDispatch, useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import { clearAuthState } from '@/redux/reducers/auth'
 
 function Pin() {
+    const router = useRouter()
+    const dispatch = useDispatch()
+    const email = useSelector(state => state.auth.email)
     const [pin, setPin] = React.useState('')
-    const [showAlert, setShowAlert] = React.useState(false)
-    
-    const submitPin = () => {
-        // kirim data ke backend
+    const [errMessage, setErrMessage] = React.useState('')
+
+    React.useEffect(() => {
+        if (!email) {
+            router.back()
+        }
+    }, [email, router])
+
+    const submitPin = async (e) => {
+        try {
+            e.preventDefault()
+            const form = new URLSearchParams({
+                email,
+                pin
+            }).toString()
+
+            const { data } = await axios.post('/api/pin', form.toString())
+            console.log(data)
+            // dispatch(clearAuthState())
+            router.replace('/auth/login')
+        } catch (err) {
+            setErrMessage('Duplicate Pin')
+        }
+
     }
 
     return (
@@ -28,13 +54,13 @@ function Pin() {
                         <div>
                             Create 6 digits pin to secure all your money and your data in Aksara Wallet. Keep it secret and don’t tell anyone about your Wallet account password and the PIN.
                         </div>
-                        <div className='flex flex-col gap-10 mt-6 items-center'>
-                            {/* {showAlert && <div className='alert alert-sucess' >Pin has 6 digits</div>} */}
+                        <form onSubmit={submitPin} className='flex flex-col gap-10 mt-6 items-center'>
+                            {errMessage && <div className='alert alert-error'>{errMessage}</div>}
                             <PinInput onChangePin={setPin} />
                             <div className='w-full'>
-                                <button onClick={submitPin} type='submit' className='btn btn-primary w-full normal-case'>Confirm</button>
+                                <button type='submit' className='btn btn-primary w-full normal-case'>Confirm</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -1,14 +1,14 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { use } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi'
-import { withIronSessionSsr } from "iron-session/next";
-import cookieConfig from '@/helpers/cookieConfig';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { Formik } from "formik";
 import * as Yup from 'yup';
 import propTypes from 'prop-types'
+import { saveEmail } from '@/redux/reducers/auth';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -130,6 +130,7 @@ FormSignUp.propTypes = {
 }
 
 function Register() {
+    const dispatch = useDispatch()
     const router = useRouter()
     const doRegister = async (values, { setSubmitting, setErrMessage }) => {
         setSubmitting(true)
@@ -142,9 +143,10 @@ function Register() {
             });
             const { data } = await axios.post('/api/register', form.toString());
             console.log(data)
+            dispatch(saveEmail(values.email))
             setSubmitting(false);
-            if (data?.results?.token) {
-                router.push('/auth/login');
+            if (data.results.token) {
+                router.push('/auth/pin')
             }
         } catch (err) {
             const message = err?.response?.data?.message

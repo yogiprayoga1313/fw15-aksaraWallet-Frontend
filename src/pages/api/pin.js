@@ -4,7 +4,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 export default withIronSessionApiRoute(
     async function loginRoute(req, res) {
         try {
-            const request = await fetch('https://cute-lime-goldfish-toga.cyclic.app/auth/login', {
+            const request = await fetch('https://outstanding-train-fawn.cyclic.app/auth/set-pin', {
                 method: "POST",
                 body: new URLSearchParams(req.body).toString(),
                 headers: {
@@ -21,7 +21,7 @@ export default withIronSessionApiRoute(
         }catch(err){
             return res.status(401).json({
                 success: false,
-                message: 'Login failed'
+                message: 'failed'
             })
         }
 

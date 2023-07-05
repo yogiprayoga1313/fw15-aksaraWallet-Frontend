@@ -5,6 +5,7 @@ import { AiOutlineArrowUp, AiOutlinePlus, AiOutlineArrowRight } from 'react-icon
 import { FiUser, FiLogOut, FiEdit2 } from 'react-icons/fi'
 import Footer from '../components/footer'
 import { FiLock } from 'react-icons/fi'
+import Link from 'next/link'
 
 
 function NewPin() {
@@ -17,25 +18,25 @@ function NewPin() {
                 <div className='flex gap-4'>
                     <div className='bg-white w-[270px] h-[678px] rounded-2xl flex justify-center'>
                         <div className='flex flex-col gap-10 text-xl font-semibold'>
-                            <div className='mt-14 flex justify-center items-center gap-3'>
+                        <div className='mt-14 flex justify-center items-center gap-3'>
                                 <div><RxDashboard size={25} /></div>
-                                <div>Dashboard</div>
+                                <Link href='/home'><div>Dashboard</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><AiOutlineArrowUp size={25} /></div>
-                                <div>Transfer</div>
+                                <Link href='/home/searchReceiver'><div>Transfer</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><AiOutlinePlus size={25} /></div>
-                                <div>Top Up</div>
+                                <Link href=''><div>Top Up</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><FiUser size={25} /></div>
-                                <div>Profile</div>
+                                <Link href='/profile'><div>Profile</div></Link>
                             </div>
                             <div className='mt-60 flex items-center gap-3'>
                                 <div><FiLogOut size={25} /></div>
-                                <div>Logout</div>
+                                <Link href='/auth/logout'><div>Logout</div></Link>
                             </div>
                         </div>
                     </div>
