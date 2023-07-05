@@ -8,6 +8,7 @@ import { withIronSessionSsr } from "iron-session/next";
 import cookieConfig from '@/helpers/cookieConfig'
 import checkCredentials from '@/helpers/checkCredentials'
 import Http from '@/helpers/http'
+import http from '@/helpers/http'
 
 
 export const getServerSideProps = withIronSessionSsr(
@@ -15,7 +16,7 @@ export const getServerSideProps = withIronSessionSsr(
     const token = req.session?.token
     checkCredentials(token, res, '/auth/login')
 
-    const { data } = await Http(token).get('/profile')
+    const { data } = await http(token).get('/profile')
     return {
       props: {
         token,

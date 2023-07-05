@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { BsBell } from 'react-icons/bs'
 import { withIronSessionSsr } from "iron-session/next";
 import Link from 'next/link';
+import { FiUser } from 'react-icons/fi';
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -29,9 +30,14 @@ function Headers({ token, user }) {
           <div className='font-bold text-3xl'>Aksara Wallet</div>
         </Link>
         <div className='flex justify-center items-center gap-7'>
-          <Image
-            src="/asset/profile.jpg" alt="My Image" width={50} height={30} className='rounded-md'
-          />
+          {!user.picture &&
+            <div className='w-12 h-12 border rounded-lg flex justify-center items-center'>
+              <FiUser size={30} />
+            </div>}
+          {user.picture &&
+            <div className='w-12 h-12 border rounded-lg overflow-hidden'>
+              <Image className='rounded object-fit ' src={user.picture} alt={user.fullName || user.email} width={100} height={100} />
+            </div>}
           <div className='flex flex-col justify-center items-start'>
             <div className='font-semibold text-xl'>{user?.username}</div>
             <div>+62813938777946</div>

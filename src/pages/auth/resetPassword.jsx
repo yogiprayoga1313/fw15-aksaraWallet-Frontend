@@ -67,7 +67,7 @@ const FormResetPassword = ({ values, errors, touched, handleChange, handleBlur, 
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.newPassword} />
-                    <button type='button' onClick={handleInputPassword} className=' text-[#4c3f91]'>
+                    {/* <button type='button' onClick={handleInputPassword} className=' text-[#4c3f91]'>
                         {iconEye ? (
                             <i className=''>
                                 <FiEye size={20} />
@@ -77,7 +77,7 @@ const FormResetPassword = ({ values, errors, touched, handleChange, handleBlur, 
                                 <FiEyeOff size={20} />
                             </i>
                         )}
-                    </button>
+                    </button> */}
                 </div>
                 <hr />
                 {errors.newPassword && touched.newPassword && (
@@ -148,7 +148,8 @@ function ResetPassword() {
         try {
             const form = new URLSearchParams({
                 email: values.email,
-                password: values.confirmPassword,
+                newPassword: values.newPassword,
+                confirmPassword: values.confirmPassword
             });
             const { data } = await axios.post('/api/resetPassword', form.toString())
             console.log(data)

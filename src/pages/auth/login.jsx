@@ -2,8 +2,6 @@ import Link from 'next/link'
 import React from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
-import { withIronSessionSsr } from "iron-session/next";
-import cookieConfig from '@/helpers/cookieConfig';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { Formik } from 'formik';
@@ -147,7 +145,7 @@ function Login() {
         } catch (error) {
             const message = error.response?.data?.message;
             if (message?.includes('duplicate')) {
-                setErrors('email exsis')
+                setErrors('email Already Exist')
             }
             setSubmitting(false)
         }

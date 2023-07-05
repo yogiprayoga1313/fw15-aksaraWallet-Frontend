@@ -4,36 +4,59 @@ import { RxDashboard } from 'react-icons/rx'
 import { AiOutlineArrowUp, AiOutlinePlus, AiOutlineArrowRight } from 'react-icons/ai'
 import { FiUser, FiLogOut, FiEdit2 } from 'react-icons/fi'
 import Footer from '../components/footer'
+import Link from 'next/link'
+import { withIronSessionSsr } from "iron-session/next";
+import cookieConfig from '@/helpers/cookieConfig'
+import checkCredentials from '@/helpers/checkCredentials'
+import Http from '@/helpers/http'
+import http from '@/helpers/http'
 
-function PersonalInformation() {
+export const getServerSideProps = withIronSessionSsr(
+    async function getServerSideProps({ req, res }) {
+      const token = req.session?.token
+      checkCredentials(token, res, '/auth/login')
+  
+      const { data } = await http(token).get('/profile')
+  
+      return {
+        props: {
+          token,
+          user: data.results
+        },
+      };
+    },
+    cookieConfig
+  );
+
+function PersonalInformation({token, user}) {
     return (
         <div className='bg-gray-200 h-screen'>
             <div>
-                <Headers />
+            <Headers token={token} user={user} />
             </div>
             <div className='mt-10 flex justify-center'>
                 <div className='flex gap-4'>
                     <div className='bg-white w-[270px] h-[678px] rounded-2xl flex justify-center'>
                         <div className='flex flex-col gap-10 text-xl font-semibold'>
-                            <div className='mt-14 flex justify-center items-center gap-3'>
+                        <div className='mt-14 flex justify-center items-center gap-3'>
                                 <div><RxDashboard size={25} /></div>
-                                <div>Dashboard</div>
+                                <Link href='/home'><div>Dashboard</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><AiOutlineArrowUp size={25} /></div>
-                                <div>Transfer</div>
+                                <Link href='/home/searchReceiver'><div>Transfer</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><AiOutlinePlus size={25} /></div>
-                                <div>Top Up</div>
+                                <Link href=''><div>Top Up</div></Link>
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div><FiUser size={25} /></div>
-                                <div>Profile</div>
+                                <Link href='/profile'><div>Profile</div></Link>
                             </div>
                             <div className='mt-60 flex items-center gap-3'>
                                 <div><FiLogOut size={25} /></div>
-                                <div>Logout</div>
+                                <Link href='/auth/logout'><div>Logout</div></Link>
                             </div>
                         </div>
                     </div>
@@ -46,16 +69,23 @@ function PersonalInformation() {
                                 </div>
                             </div>
                             <div className='shadow-lg shadow-gray-500/20 flex flex-col justify-center items-start p-3 rounded-xl'>
-                                <div className='text-sm opacity-60'>First Name</div>
-                                <div className='text-xl font-bold'>Robert</div>
+                                <div className='text-sm opacity-60'>Username</div>
+                                <div className='text-xl font-bold'>{user?.username}</div>
                             </div>
                             <div className='shadow-lg shadow-gray-500/20 flex flex-col justify-center items-start p-3 rounded-xl'>
-                                <div className='text-sm opacity-60'>Last Name</div>
-                                <div className='text-xl font-bold'>Chandler</div>
+                                <div className='text-sm opacity-60'>Fullname</div>
+                                <div className='text-xl font-bold'>
+                                    {!user.fullName &&  (
+                                        <div className='opacity-40 text-md'>No set</div>
+                                    )}
+                                    {user?.fullName && (
+                                         <div>{user?.fullName}</div>
+                                    )}
+                                    </div>
                             </div>
                             <div className='shadow-lg shadow-gray-500/20 flex flex-col justify-center items-start p-3 rounded-xl'>
                                 <div className='text-sm opacity-60'>Verified E-mail</div>
-                                <div className='text-xl font-bold opacity-70'>pewdiepie1@gmail.com</div>
+                                <div className='text-xl font-bold opacity-70'>{user?.email}</div>
                             </div>
                             <div className='shadow-lg shadow-gray-500/20 flex flex-col justify-center items-start p-3 rounded-xl'>
                                 <div className='text-sm opacity-60'>Phone Number</div>

@@ -1,14 +1,14 @@
 import axios from "axios";
 
- const Http = (token) =>{
+ const http = (token) =>{
     const headers = {}
     if(token){
         headers.Authorization = `Bearer ${token}`
     } 
     return axios.create({
         headers,
-        baseURL: 'https://cute-lime-goldfish-toga.cyclic.app'
+        baseURL: BACKEND_URL,
     })
  }
 
- export default Http
+ export default http
