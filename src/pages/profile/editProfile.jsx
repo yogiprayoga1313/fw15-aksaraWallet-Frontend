@@ -9,7 +9,6 @@ import { withIronSessionSsr } from "iron-session/next";
 import cookieConfig from '@/helpers/cookieConfig'
 import Link from 'next/link'
 import checkCredentials from '@/helpers/checkCredentials'
-import Http from '@/helpers/http'
 import http from '@/helpers/http'
 import { Formik } from 'formik'
 
@@ -36,6 +35,14 @@ function EditProfile({ token, user }) {
     const [selectedPicture, setSelectedPicture] = React.useState(false)
     const [openModal, setOpenModal] = React.useState(false)
     const [pictureURI, setPictureURI] = React.useState('')
+    const [profile, setProfile] = React.useState({})
+
+    const getProfile = React.useCallback(async () => {
+        const { data } = await http(token).get('/profile')
+        console.log(data)
+        setProfile(data.results)
+    }, [token])
+
 
     const updateDisplay = () => {
         dispatch(getProfileAction(token))
@@ -84,6 +91,7 @@ function EditProfile({ token, user }) {
         }
         setOpenModal(false)
         updateDisplay()
+        setProfile(data.results)
     }
 
     return (
@@ -142,7 +150,7 @@ function EditProfile({ token, user }) {
                                         <div>
                                             {!selectedPicture &&
                                                 <div className='w-28 h-28 border rounded-lg flex justify-center items-center'>
-                                                    <FiUser size={50} />
+                                                    <Image className='rounded object-fit bg-cover' src={user.picture} alt='profile' width={200} height={200} />
                                                 </div>}
                                             {selectedPicture &&
                                                 <div className='w-28 h-28 border rounded-lg overflow-hidden'>

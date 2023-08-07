@@ -7,7 +7,8 @@ import axios from "axios";
     } 
     return axios.create({
         headers,
-        baseURL: BACKEND_URL,
+        baseURL:process.env.NEXT_PUBLIC_BACKEND_URL
+        // baseURL: 'https://kind-blue-cod-garb.cyclic.cloud/',
     })
  }
 

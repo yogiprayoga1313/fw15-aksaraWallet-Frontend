@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { withIronSessionSsr } from "iron-session/next";
 import cookieConfig from '@/helpers/cookieConfig'
 import checkCredentials from '@/helpers/checkCredentials'
-import Http from '@/helpers/http'
 import http from '@/helpers/http'
 
 export const getServerSideProps = withIronSessionSsr(

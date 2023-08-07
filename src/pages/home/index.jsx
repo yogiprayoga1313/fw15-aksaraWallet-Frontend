@@ -36,6 +36,7 @@ function Dashboard({ token, user }) {
   const [trx, setTrx] = React.useState([])
   const getTransactions = React.useCallback(async () => {
     const { data } = await http(token).get('/transactions', { params: { limit: 4 } })
+    console.log(data)
     setTrx(data.results)
   }, [token])
 

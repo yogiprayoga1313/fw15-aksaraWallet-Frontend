@@ -26,12 +26,24 @@ export const getServerSideProps = withIronSessionSsr(
       },
     };
   },
-  cookieConfig
+  cookieConfig,
 );
 
 
 
 function SelfProfile({ token, user }) {
+  const [profile, setProfile] = React.useState({})
+
+  const getProfile = React.useCallback(async () => {
+    const { data } = await http(token).get('/profile')
+    console.log(data)
+    setProfile(data.results)
+  }, [token])
+
+  React.useEffect(() => {
+    getProfile()
+  }, [getProfile])
+
   return (
     <div className='bg-gray-200 h-screen'>
       <div>
