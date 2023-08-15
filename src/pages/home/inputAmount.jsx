@@ -24,7 +24,7 @@ export const getServerSideProps = withIronSessionSsr(
         checkCredentials(token, res, '/auth/login')
 
         const { data } = await http(token).get('/profile')
-        console.log(data)
+        // console.log(data)
 
         return {
             props: {
