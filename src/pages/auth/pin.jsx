@@ -27,7 +27,6 @@ function Pin() {
             }).toString()
 
             const { data } = await axios.post('/api/pin', form.toString())
-            // console.log(data)
             // dispatch(clearAuthState())
             router.replace('/auth/login')
         } catch (err) {
