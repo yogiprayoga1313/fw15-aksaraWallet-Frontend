@@ -39,7 +39,7 @@ function EditProfile({ token, user }) {
 
     const getProfile = React.useCallback(async () => {
         const { data } = await http(token).get('/profile')
-        console.log(data)
+        // console.log(data)
         setProfile(data.results)
     }, [token])
 

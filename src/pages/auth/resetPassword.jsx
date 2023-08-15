@@ -152,7 +152,7 @@ function ResetPassword() {
                 confirmPassword: values.confirmPassword
             });
             const { data } = await axios.post('/api/resetPassword', form.toString())
-            console.log(data)
+            // console.log(data)
             setSubmitting(false)
             if (data) {
                 router.push('/auth/login')

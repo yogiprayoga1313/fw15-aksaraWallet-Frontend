@@ -142,7 +142,7 @@ function Register() {
                 password: values.password
             });
             const { data } = await axios.post('/api/register', form.toString());
-            console.log(data)
+            // console.log(data)
             dispatch(saveEmail(values.email))
             setSubmitting(false);
             if (data.results.token) {

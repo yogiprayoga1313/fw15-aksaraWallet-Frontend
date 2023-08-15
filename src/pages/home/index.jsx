@@ -19,7 +19,7 @@ export const getServerSideProps = withIronSessionSsr(
     checkCredentials(token, res, '/auth/login')
 
     const { data } = await http(token).get('/profile')
-    console.log(data)
+    // console.log(data)
 
     return {
       props: {
@@ -36,7 +36,7 @@ function Dashboard({ token, user }) {
   const [trx, setTrx] = React.useState([])
   const getTransactions = React.useCallback(async () => {
     const { data } = await http(token).get('/transactions', { params: { limit: 4 } })
-    console.log(data)
+    // console.log(data)
     setTrx(data.results)
   }, [token])
 
@@ -53,7 +53,7 @@ function Dashboard({ token, user }) {
       const { value: amount } = event.target.elements.amount
       const form = new URLSearchParams({ amount })
       const { data } = await http(token).post('/transactions/topup', form.toString())
-      console.log(data)
+      // console.log(data)
       router.reload('/home')
     } catch (err) {
       console.error(err)

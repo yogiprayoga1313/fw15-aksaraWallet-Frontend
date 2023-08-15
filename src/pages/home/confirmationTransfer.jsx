@@ -50,7 +50,7 @@ function ConfirmationTransfer({ token, user }) {
             pin
         }).toString()
         const { data } = await http(token).post('/transactions/transfer', form)
-        console.log(data)
+        // console.log(data)
         dispatch(clearTransferState())
         router.replace('/home/'+data.results.id)
     }

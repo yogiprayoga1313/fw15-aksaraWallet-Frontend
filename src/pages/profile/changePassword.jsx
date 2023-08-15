@@ -42,7 +42,7 @@ function ChangePassword({ token, user }) {
         const { value: confirmPassword } = event.target.confirmPassword
         const form = new URLSearchParams({ oldPassword, newPassword, confirmPassword })
         const { data } = await http(token).patch('/profile/change-password', form.toString())
-        console.log(data)
+        // console.log(data)
         router.replace('/profile')
 
     }
