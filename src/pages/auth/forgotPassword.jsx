@@ -83,7 +83,6 @@ function ForgotPassword() {
                 email: values.email
             });
             const { data } = await axios.post('/api/forgotPassword', form.toString())
-            // console.log(data)
             setSubmitting(false)
             if (data) {
                 router.push('/auth/resetPassword')

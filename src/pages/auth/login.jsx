@@ -137,7 +137,6 @@ function Login() {
                 password: values.password
             });
             const { data } = await axios.post('/api/login', form.toString())
-            // console.log(data)
             setSubmitting(false)
             if (data.results.token) {
                 router.push('/home')
